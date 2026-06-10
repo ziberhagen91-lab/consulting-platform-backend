@@ -1,16 +1,14 @@
 import {
   ValidationPipe,
-} from '@nestjs/common'
+} from "@nestjs/common"
 
-import { NestFactory } from '@nestjs/core'
+import { NestFactory } from "@nestjs/core"
 
-import { AppModule } from './app.module'
+import { AppModule } from "./app.module"
 
-import { HttpExceptionFilter }
-  from './common/filters/http-exception.filter'
+import { HttpExceptionFilter } from "./common/filters/http-exception.filter"
 
 async function bootstrap() {
-
   const app =
     await NestFactory.create(AppModule)
 
@@ -26,12 +24,14 @@ async function bootstrap() {
   )
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: "http://localhost:3000",
     credentials: true,
   })
 
-  await app.listen(4000)
-
+  await app.listen(
+    4000,
+    "0.0.0.0",
+  )
 }
 
 bootstrap()

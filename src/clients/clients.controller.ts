@@ -38,15 +38,24 @@ export class ClientsController {
   }
 
   @Get()
-  async getClients() {
+async getClients() {
+  return this.prisma.client.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
 
-    return this.prisma.client.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
-  }
-
+@Get(':id')
+async getClientById(
+  @Param('id') id: string,
+) {
+  return this.prisma.client.findUnique({
+    where: {
+      id,
+    },
+  });
+}
   @Roles('admin')
   @UseGuards(RolesGuard)
   @Post()

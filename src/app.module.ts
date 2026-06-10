@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
-import { AuthModule } from './auth/auth.module'
-import { PrismaModule } from './prisma/prisma.module'
-import { ClientsModule } from './clients/clients.module'
+import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { ClientsModule } from './clients/clients.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ClientsModule } from './clients/clients.module'
     PrismaModule,
     AuthModule,
     ClientsModule,
+    TasksModule,
   ],
 })
 export class AppModule {}
