@@ -22,4 +22,8 @@ export class CreateTaskDto {
   @IsOptional()
   @IsString()
   clientId?: string;
+
+  @IsOptional()
+  @IsString()
+  dueDate?: string;
 }

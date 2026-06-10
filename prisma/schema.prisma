@@ -35,5 +35,6 @@ model Task {
   client      Client?  @relation(fields: [clientId], references: [id])
 
   createdAt   DateTime @default(now())
+  dueDate     DateTime?
   updatedAt   DateTime @updatedAt
 }
