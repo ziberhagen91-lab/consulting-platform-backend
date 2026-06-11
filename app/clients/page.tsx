@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 
 import { useEffect, useState } from "react"
 
@@ -37,10 +38,18 @@ export default function ClientsPage() {
           }
         )
 
-        const data =
-          await response.json()
+const data =
+  await response.json()
 
-        setClients(data)
+console.log("CLIENTS API:", data)
+
+if (Array.isArray(data)) {
+  setClients(data)
+} else {
+  console.error("Unexpected response:", data)
+  toast.error("Invalid response from backend")
+  setClients([])
+}
 
       } catch (error) {
 
@@ -266,12 +275,12 @@ export default function ClientsPage() {
                 {user?.role === "admin" && (
 
                   <>
-
-                    <button
-                      className="text-blue-400 hover:text-blue-300 transition"
-                    >
-                      Edit
-                    </button>
+<Link
+  href={`/edit-client?id=${client.id}`}
+  className="text-blue-400 hover:text-blue-300 transition"
+>
+  Edit
+</Link>
 
                     <button
                       onClick={() =>

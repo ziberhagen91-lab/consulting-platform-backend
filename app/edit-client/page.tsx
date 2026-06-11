@@ -1,57 +1,96 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function EditClientPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [clientName, setClientName] = useState("")
-  const [serviceType, setServiceType] = useState("")
+  const id = searchParams.get("id");
 
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  const clientIndex = searchParams.get("index")
+  const [name, setName] = useState("");
+  const [service, setService] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!id) return;
 
-    const storedClients =
-      JSON.parse(localStorage.getItem("clients") || "[]")
+    const fetchClient = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-    const client = storedClients[Number(clientIndex)]
+        const response = await fetch(
+          `http://localhost:4000/clients/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to load client");
+        }
 
-    if (client) {
-      setClientName(client.name)
-      setServiceType(client.service)
+        const client = await response.json();
+
+        setName(client.name ?? "");
+        setService(client.service ?? "");
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load client");
+      }
+    };
+
+    fetchClient();
+  }, [id]);
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    if (!id) return;
+
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `http://localhost:4000/clients/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name,
+            service,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update client");
+      }
+
+      toast.success("Client updated successfully");
+      router.push("/clients");
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update client");
+    } finally {
+      setLoading(false);
     }
-
-  }, [clientIndex])
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const storedClients =
-      JSON.parse(localStorage.getItem("clients") || "[]")
-
-    storedClients[Number(clientIndex)] = {
-      ...storedClients[Number(clientIndex)],
-      name: clientName,
-      service: serviceType,
-    }
-
-    localStorage.setItem(
-      "clients",
-      JSON.stringify(storedClients)
-    )
-
-    router.push("/clients")
-  }
+  };
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-
       <div className="w-full max-w-xl border border-zinc-800 bg-zinc-950 rounded-2xl p-8">
-
         <h1 className="text-4xl font-bold mb-2">
           Edit Client
         </h1>
@@ -64,34 +103,33 @@ export default function EditClientPage() {
           onSubmit={handleSubmit}
           className="flex flex-col gap-5"
         >
-
           <input
             type="text"
             placeholder="Client Name"
-            value={clientName}
-            onChange={(e) => setClientName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="bg-black border border-zinc-800 rounded-xl px-4 py-3 outline-none"
+            required
           />
 
           <input
             type="text"
-            placeholder="Service Type"
-            value={serviceType}
-            onChange={(e) => setServiceType(e.target.value)}
+            placeholder="Service"
+            value={service}
+            onChange={(e) => setService(e.target.value)}
             className="bg-black border border-zinc-800 rounded-xl px-4 py-3 outline-none"
+            required
           />
 
           <button
             type="submit"
-            className="bg-white text-black rounded-xl py-3 font-semibold text-center hover:opacity-80 transition"
+            disabled={loading}
+            className="bg-white text-black rounded-xl py-3 font-semibold hover:opacity-80 transition disabled:opacity-50"
           >
-            Save Changes
+            {loading ? "Saving..." : "Save Changes"}
           </button>
-
         </form>
-
       </div>
-
     </main>
-  )
+  );
 }

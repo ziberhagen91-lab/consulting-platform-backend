@@ -30,7 +30,71 @@ export default function DashboardPage() {
 
   const [loading, setLoading] =
     useState(true)
+const [language, setLanguage] =
+  useState<"uk" | "en">("uk");
 
+useEffect(() => {
+  const saved = localStorage.getItem("language");
+
+  if (saved === "uk" || saved === "en") {
+    setLanguage(saved);
+  }
+}, []);
+const t = {
+  uk: {
+    dashboard: "Панель керування",
+    welcome: "З поверненням",
+
+    clients: "Клієнти",
+    activeClients: "Активні клієнти",
+
+    revenue: "Дохід",
+    monthlyRevenue: "Місячний дохід",
+
+    projects: "Проєкти",
+    activeProjects: "Активні проєкти",
+
+    recentActivity: "Остання активність",
+
+    newClientAdded: "Додано нового клієнта",
+    analyticsUpdated: "Аналітику оновлено",
+    jwtActive: "JWT-автентифікація активна",
+
+    justNow: "Щойно",
+    live: "Наживо",
+    secure: "Захищено",
+
+    revenueAnalytics: "Аналітика доходу",
+    monthlyGrowth: "Щомісячне зростання доходу",
+  },
+
+  en: {
+    dashboard: "Dashboard",
+    welcome: "Welcome back",
+
+    clients: "Clients",
+    activeClients: "Active clients",
+
+    revenue: "Revenue",
+    monthlyRevenue: "Monthly revenue",
+
+    projects: "Projects",
+    activeProjects: "Active projects",
+
+    recentActivity: "Recent Activity",
+
+    newClientAdded: "New client added",
+    analyticsUpdated: "Dashboard analytics updated",
+    jwtActive: "JWT authentication active",
+
+    justNow: "Just now",
+    live: "Live",
+    secure: "Secure",
+
+    revenueAnalytics: "Revenue Analytics",
+    monthlyGrowth: "Monthly revenue growth",
+  },
+};
   const revenueData = [
     {
       month: "Jan",
@@ -164,27 +228,23 @@ export default function DashboardPage() {
       <section className="flex-1 p-10">
 
         <header className="flex justify-between items-center mb-10">
+  <div>
+    <h2 className="text-4xl font-bold">
+      {t[language].dashboard}
+    </h2>
 
-          <div>
-
-            <h2 className="text-4xl font-bold">
-              Dashboard
-            </h2>
-
-            <p className="text-zinc-400 mt-2">
-              Welcome back, Sergey 👋
-            </p>
-
-          </div>
-
-        </header>
+    <p className="text-zinc-400 mt-2">
+      {t[language].welcome}, Sergey 👋
+    </p>
+  </div>
+</header>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           <Card className="hover:border-white hover:-translate-y-1 transition duration-300">
 
             <h3 className="text-xl font-semibold mb-2">
-              Clients
+              {t[language].clients}
             </h3>
 
             <p className="text-4xl font-bold">
@@ -192,7 +252,9 @@ export default function DashboardPage() {
             </p>
 
             <p className="text-zinc-400 mt-2">
-              Active clients
+            
+  {t[language].activeClients}
+
             </p>
 
           </Card>
@@ -200,7 +262,9 @@ export default function DashboardPage() {
           <Card className="hover:border-white hover:-translate-y-1 transition duration-300">
 
             <h3 className="text-xl font-semibold mb-2">
-              Revenue
+              
+  {t[language].revenue}
+
             </h3>
 
             <p className="text-4xl font-bold">
@@ -209,7 +273,7 @@ export default function DashboardPage() {
             </p>
 
             <p className="text-zinc-400 mt-2">
-              Monthly revenue
+              {t[language].monthlyRevenue}
             </p>
 
           </Card>
@@ -217,7 +281,7 @@ export default function DashboardPage() {
           <Card className="hover:border-white hover:-translate-y-1 transition duration-300">
 
             <h3 className="text-xl font-semibold mb-2">
-              Projects
+              {t[language].projects}
             </h3>
 
             <p className="text-4xl font-bold">
@@ -225,8 +289,9 @@ export default function DashboardPage() {
             </p>
 
             <p className="text-zinc-400 mt-2">
-              Active projects
-            </p>
+              
+  {t[language].activeProjects}
+</p>
 
           </Card>
 
@@ -235,7 +300,7 @@ export default function DashboardPage() {
         <Card className="mt-10">
 
           <h3 className="text-2xl font-semibold mb-6">
-            Recent Activity
+            {t[language].recentActivity}
           </h3>
 
           <div className="flex flex-col gap-4">
@@ -243,11 +308,11 @@ export default function DashboardPage() {
             <div className="flex justify-between border-b border-zinc-900 pb-4">
 
               <p>
-                New client added
+                {t[language].newClientAdded}
               </p>
 
               <span className="text-zinc-500">
-                Just now
+                {t[language].justNow}
               </span>
 
             </div>
@@ -255,23 +320,24 @@ export default function DashboardPage() {
             <div className="flex justify-between border-b border-zinc-900 pb-4">
 
               <p>
-                Dashboard analytics updated
+                {t[language].analyticsUpdated}
               </p>
 
               <span className="text-zinc-500">
-                Live
-              </span>
+                
+  {t[language].live}
+</span>
 
             </div>
 
             <div className="flex justify-between">
 
               <p>
-                JWT authentication active
+                {t[language].jwtActive}
               </p>
 
               <span className="text-zinc-500">
-                Secure
+               {t[language].secure}
               </span>
 
             </div>
@@ -286,13 +352,14 @@ export default function DashboardPage() {
 
             <div>
 
-              <h3 className="text-2xl font-semibold">
-                Revenue Analytics
-              </h3>
+<h3 className="text-2xl font-semibold">
+  {t[language].revenueAnalytics}
+</h3>
 
-              <p className="text-zinc-400 mt-2">
-                Monthly revenue growth
-              </p>
+<p className="text-zinc-400 mt-2">
+  {t[language].monthlyGrowth}
+</p>
+              
 
             </div>
 

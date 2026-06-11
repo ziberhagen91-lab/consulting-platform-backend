@@ -1,0 +1,12 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "clients": "Clients",
+    "tasks": "Tasks",
+    "login": "Login",
+    "register": "Register",
+    "addClient": "Add Client",
+    "addTask": "Add Task",
+    "logout": "Logout"
+  }
+}
