@@ -11,7 +11,44 @@ export default function ClientsPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [user, setUser] = useState<any>(null)
+const [language, setLanguage] =
+  useState<"uk" | "en">("uk")
 
+useEffect(() => {
+  const saved = localStorage.getItem("language")
+
+  if (saved === "uk" || saved === "en") {
+    setLanguage(saved)
+  }
+}, [])
+
+const t = {
+  uk: {
+    clients: "Клієнти",
+    manageClients: "Керуйте своїми клієнтами",
+    addClient: "Додати клієнта",
+    searchClients: "Пошук клієнтів...",
+    noClients: "Клієнтів не знайдено",
+    createFirst: "Створіть свого першого клієнта",
+    addFirst: "Додати першого клієнта",
+    active: "Активний",
+    edit: "Редагувати",
+    delete: "Видалити",
+  },
+
+  en: {
+    clients: "Clients",
+    manageClients: "Manage your consulting clients",
+    addClient: "Add Client",
+    searchClients: "Search clients...",
+    noClients: "No clients found",
+    createFirst: "Create your first consulting client",
+    addFirst: "Add First Client",
+    active: "Active",
+    edit: "Edit",
+    delete: "Delete",
+  },
+}
   useEffect(() => {
 
     const storedUser =
@@ -186,11 +223,11 @@ if (Array.isArray(data)) {
         <div>
 
           <h1 className="text-4xl font-bold">
-            Clients
+            {t[language].clients}
           </h1>
 
           <p className="text-zinc-400 mt-2">
-            Manage your consulting clients
+            {t[language].manageClients}
           </p>
 
         </div>
@@ -201,7 +238,7 @@ if (Array.isArray(data)) {
             href="/add-client"
             className="bg-white text-black px-5 py-3 rounded-xl font-semibold hover:opacity-80 transition"
           >
-            Add Client
+            {t[language].addClient}
           </a>
 
         )}
@@ -210,7 +247,7 @@ if (Array.isArray(data)) {
 
       <input
         type="text"
-        placeholder="Search clients..."
+        placeholder={t[language].searchClients}
         value={search}
         onChange={(e) =>
           setSearch(e.target.value)
@@ -223,11 +260,11 @@ if (Array.isArray(data)) {
         <div className="border border-dashed border-zinc-800 rounded-2xl p-14 text-center bg-zinc-950">
 
           <h2 className="text-3xl font-bold mb-4">
-            No clients found
+            {t[language].noClients}
           </h2>
 
           <p className="text-zinc-400 mb-8">
-            Create your first consulting client
+            {t[language].createFirst}
           </p>
 
           {user?.role === "admin" && (
@@ -236,7 +273,7 @@ if (Array.isArray(data)) {
               href="/add-client"
               className="inline-block bg-white text-black px-6 py-3 rounded-xl font-semibold hover:opacity-80 transition"
             >
-              Add First Client
+              {t[language].addFirst}
             </a>
 
           )}
@@ -269,7 +306,9 @@ if (Array.isArray(data)) {
               <div className="flex items-center gap-4">
 
                 <span className="text-green-400">
-                  Active
+                 
+  {t[language].active}
+
                 </span>
 
                 {user?.role === "admin" && (
@@ -279,7 +318,7 @@ if (Array.isArray(data)) {
   href={`/edit-client?id=${client.id}`}
   className="text-blue-400 hover:text-blue-300 transition"
 >
-  Edit
+  {t[language].edit}
 </Link>
 
                     <button
@@ -288,7 +327,7 @@ if (Array.isArray(data)) {
                       }
                       className="text-red-400 hover:text-red-300 transition"
                     >
-                      Delete
+                      {t[language].delete}
                     </button>
 
                   </>

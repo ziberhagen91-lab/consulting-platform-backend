@@ -1,22 +1,57 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import toast from "react-hot-toast"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const router = useRouter()
+  const [language, setLanguage] =
+    useState<"uk" | "en">("uk");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("language");
+
+    if (saved === "uk" || saved === "en") {
+      setLanguage(saved);
+    }
+  }, []);
+
+  const t = {
+    uk: {
+      login: "Вхід",
+      email: "Email",
+      password: "Пароль",
+      signIn: "Увійти",
+      signingIn: "Вхід...",
+      loginSuccess: "Вхід успішний",
+      loginFailed: "Помилка входу",
+      backendError: "Помилка з'єднання з сервером",
+    },
+
+    en: {
+      login: "Login",
+      email: "Email",
+      password: "Password",
+      signIn: "Sign In",
+      signingIn: "Signing In...",
+      loginSuccess: "Login successful",
+      loginFailed: "Login failed",
+      backendError: "Backend connection error",
+    },
+  };
+
+  const router = useRouter();
 
   const handleLogin = async (
     e: React.FormEvent<HTMLFormElement>,
   ) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    setLoading(true)
+    setLoading(true);
 
     try {
       const response = await fetch(
@@ -31,54 +66,48 @@ export default function LoginPage() {
             password,
           }),
         },
-      )
+      );
 
-      const data = await response.json()
-
-      console.log("Response:", data)
+      const data = await response.json();
 
       if (data.success) {
         localStorage.setItem(
           "token",
           data.token,
-        )
+        );
 
         localStorage.setItem(
           "user",
           JSON.stringify(data.user),
-        )
+        );
 
-        toast.success("Login successful")
+        toast.success(
+          t[language].loginSuccess,
+        );
 
-        router.push("/dashboard")
+        router.push("/dashboard");
       } else {
         toast.error(
-          data.message || "Login failed",
-        )
+          data.message ||
+            t[language].loginFailed,
+        );
       }
     } catch (error) {
-      console.error(
-        "LOGIN ERROR:",
-        error,
-      )
-
-      alert(
-        `LOGIN ERROR:\n${String(error)}`,
-      )
+      console.error(error);
 
       toast.error(
-        "Backend connection error",
-      )
+        t[language].backendError,
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <main className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       <div className="w-full max-w-md border border-zinc-800 bg-zinc-950 rounded-2xl p-8">
         <h1 className="text-4xl font-bold mb-6 text-center">
-          Login
+          {t[language].login}
         </h1>
 
         <form
@@ -87,7 +116,7 @@ export default function LoginPage() {
         >
           <input
             type="email"
-            placeholder="Email"
+            placeholder={t[language].email}
             value={email}
             onChange={(e) =>
               setEmail(e.target.value)
@@ -97,7 +126,7 @@ export default function LoginPage() {
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder={t[language].password}
             value={password}
             onChange={(e) =>
               setPassword(e.target.value)
@@ -111,11 +140,11 @@ export default function LoginPage() {
             className="bg-white text-black rounded-xl py-3 font-semibold hover:opacity-80 transition disabled:opacity-50"
           >
             {loading
-              ? "Signing In..."
-              : "Sign In"}
+              ? t[language].signingIn
+              : t[language].signIn}
           </button>
         </form>
       </div>
     </main>
-  )
+  );
 }
