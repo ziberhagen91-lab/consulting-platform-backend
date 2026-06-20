@@ -1,0 +1,35 @@
+warning: in the working copy of 'prisma/schema.prisma', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/prisma/schema.prisma b/prisma/schema.prisma[m
+[1mindex 7f04df7..16a5029 100644[m
+[1m--- a/prisma/schema.prisma[m
+[1m+++ b/prisma/schema.prisma[m
+[36m@@ -20,21 +20,18 @@[m [mmodel Client {[m
+   name      String[m
+   service   String[m
+   createdAt DateTime @default(now())[m
+[31m-[m
+   tasks     Task[][m
+ }[m
+ [m
+ model Task {[m
+[31m-  id          String   @id @default(cuid())[m
+[32m+[m[32m  id          String    @id @default(cuid())[m
+   title       String[m
+   description String?[m
+[31m-  status      String   @default("TODO")[m
+[31m-  priority    String   @default("MEDIUM")[m
+[31m-[m
+[32m+[m[32m  status      String    @default("TODO")[m
+[32m+[m[32m  priority    String    @default("MEDIUM")[m
+   clientId    String?[m
+[31m-  client      Client?  @relation(fields: [clientId], references: [id])[m
+[31m-[m
+[31m-  createdAt   DateTime @default(now())[m
+[32m+[m[32m  createdAt   DateTime  @default(now())[m
+   dueDate     DateTime?[m
+[31m-  updatedAt   DateTime @updatedAt[m
+[31m-}[m
+\ No newline at end of file[m
+[32m+[m[32m  updatedAt   DateTime  @updatedAt[m
+[32m+[m[32m  client      Client?   @relation(fields: [clientId], references: [id])[m
+[32m+[m[32m}[m
