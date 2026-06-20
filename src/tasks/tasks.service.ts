@@ -7,13 +7,20 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createTaskDto: CreateTaskDto) {
-    return this.prisma.task.create({
-      data: createTaskDto,
-      include: {
-        client: true,
-      },
-    });
+  async create(createTaskDto: CreateTaskDto) {
+    try {
+      console.log('TASK DTO:', createTaskDto);
+
+      return await this.prisma.task.create({
+        data: createTaskDto,
+        include: {
+          client: true,
+        },
+      });
+    } catch (error) {
+      console.error('CREATE TASK ERROR:', error);
+      throw error;
+    }
   }
 
   findAll() {

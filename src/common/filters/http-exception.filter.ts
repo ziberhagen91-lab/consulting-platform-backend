@@ -15,6 +15,11 @@ export class HttpExceptionFilter
     host: ArgumentsHost,
   ) {
 
+    console.error(
+      'FULL ERROR:',
+      exception,
+    )
+
     const ctx =
       host.switchToHttp()
 
@@ -34,7 +39,9 @@ export class HttpExceptionFilter
         ? exception.getResponse()
         : null
 
-    let message = 'Internal server error'
+    let message =
+      exception?.message ||
+      'Internal server error'
 
     if (
       typeof exceptionResponse === 'object' &&
@@ -45,8 +52,8 @@ export class HttpExceptionFilter
         exceptionResponse as any
 
       if (Array.isArray(res.message)) {
-        message = res.message[0]
-      } else {
+        message = res.message.join(', ')
+      } else if (res.message) {
         message = res.message
       }
 
